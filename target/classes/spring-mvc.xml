@@ -41,7 +41,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-
+    <!--mvc的注解驱动-->
     <mvc:annotation-driven>
         <!--配置@ResponseBody由fastjson解析 -->
         <mvc:message-converters>
@@ -65,5 +65,5 @@
     <!-- 使用resources过滤掉不需要dispatcherservlet的资源（即静态资源，例如css、js、html、images）。
         在使用resources时必须使用annotation-driven，否则resources元素会阻止任意控制器被调用 -->
     <!-- 允许js目录下的所有文件可见 -->
-    <!--    <mvc:resources location="" mapping="/**"/>-->
+    <!--<mvc:resources location="" mapping="/**"/>-->
 </beans>

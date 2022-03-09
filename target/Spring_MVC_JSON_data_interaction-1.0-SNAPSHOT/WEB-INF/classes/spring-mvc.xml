@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--mvc的注解驱动-->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <!--注册类型转换器conversionService -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+
+            </list>
+        </property>
+    </bean>
+
+
+    <!--开放资源的访问-->
+    <!--<mvc:resources mapping="/js/**" location="/js/"/>-->
+    <!--<mvc:resources mapping="/img/**" location="/img/"/>-->
+    <!--自动-->
+    <mvc:default-servlet-handler/>
+
+    <!--Controller的组件扫描-->
+    <context:component-scan base-package="mao.spring_mvc_json_data_interaction">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+    <!--配置内部资源视图解析器-->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+    <mvc:annotation-driven>
+        <!--配置@ResponseBody由fastjson解析 -->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="defaultCharset" value="UTF-8"/>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean id="fastJsonpResponseBodyAdvice"
+          class="com.alibaba.fastjson.support.spring.FastJsonpResponseBodyAdvice">
+        <constructor-arg>
+            <list>
+                <value>callback</value>
+                <value>jsonp</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <!-- annotation-driven用于简化开发的配置，注解DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter -->
+    <!-- 使用resources过滤掉不需要dispatcherservlet的资源（即静态资源，例如css、js、html、images）。
+        在使用resources时必须使用annotation-driven，否则resources元素会阻止任意控制器被调用 -->
+    <!-- 允许js目录下的所有文件可见 -->
+    <!--    <mvc:resources location="" mapping="/**"/>-->
+</beans>
